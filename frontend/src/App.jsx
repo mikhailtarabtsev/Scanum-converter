@@ -1,34 +1,69 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [filesSubmitted, setFilesSubmitted] = useState(null)
+
+  const handleFile = (event) =>{
+    event.preventDefault()
+    // prevent default behaviour of a browser
+    const file = event.target.files[0];
+    //Take the first file of the submitted
+    if (file){
+      const  fileData =   {
+        name: file.name,
+        size: file.size,
+      }
+    //if file exists, generate a new object
+      if(filesSubmitted){
+        const newFileList = filesSubmitted.concat(fileData)
+        setFilesSubmitted(newFileList)
+      }
+      //if previous files have been submitted, add iut to the state
+      else if (!filesSubmitted){
+        const files = []
+        const newFileList = files.concat(fileData)
+        setFilesSubmitted(newFileList)
+      }
+      //else create an empty array and push the new file data inside
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+  
+    <div className='app' >
+
+
+
+    
+    <div className="project-bar"  >
+      {filesSubmitted?
+      <>
+      <div className="project-bar-header">Files submitted :</div>
+      <ul>
+        {filesSubmitted.map((file, index) => (
+          <li className= "file"  key= {index}> 
+            <p className='file-name'> <u>Name</u>: {file.name}</p>
+            <p><u>Size</u>: {file.size /1000} kB</p>
+            </li>))
+        }
+      </ul>
+      {/* loops through the array of submitted files and renders the file data 
+      if the files have been submitted*/}
+      </>
+      :<p>Try submitting a file</p>}
+      {/*otherwise returns a prompt to submit a new file*/}
+    </div>
+    <div className= "dropper">
+      <input
+        className='file-input' 
+        type='file'
+        onChange={handleFile}
+        />
+
+    </div>
+    
+    </div>
   )
 }
 
