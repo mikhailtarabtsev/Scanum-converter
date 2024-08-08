@@ -1,31 +1,39 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import fileService from './services/file'
 
 function App() {
 
   const [filesSubmitted, setFilesSubmitted] = useState(null)
 
+  useEffect( ()=>{
+    
+    const res = fileService.getAll()
+    if(res){setFilesSubmitted(res)}
+    else if (!res){ setFilesSubmitted([])}
+    
+  },[]
+  )
   const handleFile = (event) =>{
     event.preventDefault()
-    // prevent default behaviour of a browser
+    //Prevent default behaviour of a browser
+
     const file = event.target.files[0];
     //Take the first file of the submitted
+
     if (file){
       const  fileData =   {
         name: file.name,
         size: file.size,
+        data: JSON.stringify(file),
+        date : new Date
       }
-    //if file exists, generate a new object
-      if(filesSubmitted){
-        const newFileList = filesSubmitted.concat(fileData)
-        setFilesSubmitted(newFileList)
-      }
-      //if previous files have been submitted, add iut to the state
-      else if (!filesSubmitted){
-        const files = []
-        const newFileList = files.concat(fileData)
-        setFilesSubmitted(newFileList)
-      }
-      //else create an empty array and push the new file data inside
+    //If file exists, generate a new object
+
+    const res = fileService.submit(fileData)
+    const newFileList = filesSubmitted.concat(res.data)
+    setFilesSubmitted(newFileList)
+    //Send a post request to the backend, await the response & add the response to the state
+
     }
   }
 
