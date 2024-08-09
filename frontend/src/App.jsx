@@ -3,17 +3,24 @@ import fileService from './services/file'
 
 function App() {
 
-  const [filesSubmitted, setFilesSubmitted] = useState(null)
+  const [filesSubmitted, setFilesSubmitted] = useState([])
 
-  useEffect( ()=>{
+
+  const dataFetch = async()=>{
+    const res = await fileService.getAll()
+    if(res.length>0){setFilesSubmitted(res)}
+    else if (res.length <= 0) { setFilesSubmitted([])}
     
-    const res = fileService.getAll()
-    if(res){setFilesSubmitted(res)}
-    else if (!res){ setFilesSubmitted([])}
     
+  }
+
+  useEffect(()=>{
+    dataFetch()
   },[]
   )
-  const handleFile = (event) =>{
+
+
+  const handleFile = async (event) =>{
     event.preventDefault()
     //Prevent default behaviour of a browser
 
@@ -21,17 +28,25 @@ function App() {
     //Take the first file of the submitted
 
     if (file){
+      const submissionDate = new Date().toISOString().slice(0, 10)
       const  fileData =   {
         name: file.name,
         size: file.size,
-        data: JSON.stringify(file),
-        date : new Date
+        date : submissionDate
       }
     //If file exists, generate a new object
 
-    const res = fileService.submit(fileData)
-    const newFileList = filesSubmitted.concat(res.data)
-    setFilesSubmitted(newFileList)
+    const res = await fileService.submit(fileData)
+    console.log("submission response",res)
+    if (res){
+      const newFileList = filesSubmitted.concat(res)
+      setFilesSubmitted(newFileList)
+      
+
+    }else{
+      console.error("submission failed")
+    }
+    
     //Send a post request to the backend, await the response & add the response to the state
 
     }
@@ -45,14 +60,15 @@ function App() {
 
     
     <div className="project-bar"  >
-      {filesSubmitted?
+      {filesSubmitted.length>0?
       <>
       <div className="project-bar-header">Files submitted :</div>
       <ul>
-        {filesSubmitted.map((file, index) => (
+        {filesSubmitted.map((f, index) => (
           <li className= "file"  key= {index}> 
-            <p className='file-name'> <u>Name</u>: {file.name}</p>
-            <p><u>Size</u>: {file.size /1000} kB</p>
+            <p className='file-name'> <u>Name</u>: {f.name}</p>
+            <p><u>Size</u>: {f.size /1000} kB</p>
+            <p><u>Date</u>: {f.date}</p>
             </li>))
         }
       </ul>
