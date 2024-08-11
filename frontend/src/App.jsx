@@ -95,7 +95,8 @@ function App() {
         type='file'
         onChange={handleFile}
         />
-      {/*invisible input element is located directly above a div with upload icon, making it drag and drop with no buttons or other crap*/}
+      {/*invisible input element is located directly above a div with upload icon,
+       making it drag and drop with no buttons or anything else*/}
 
     </div>
     
