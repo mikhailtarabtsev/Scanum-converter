@@ -10,8 +10,6 @@ function App() {
     const res = await fileService.getAll()
     if(res.length>0){setFilesSubmitted(res)}
     else if (res.length <= 0) { setFilesSubmitted([])}
-    
-    
   }
 
   useEffect(()=>{
@@ -52,6 +50,16 @@ function App() {
     }
   }
 
+
+  const deleteHandler = async (id) =>{
+    if(window.confirm("you sure you want to delete this file?")){
+      await fileService.delete(id)
+      dataFetch()
+    }
+
+    
+    
+  }
   return (
   
     <div className='app' >
@@ -64,12 +72,15 @@ function App() {
       <>
       <div className="project-bar-header">Files submitted :</div>
       <ul>
-        {filesSubmitted.map((f, index) => (
-          <li className= "file"  key= {index}> 
+        {filesSubmitted.map((f) => (
+          <li className= "file"  key= {f.id}> 
             <p className='file-name'> <u>Name</u>: {f.name}</p>
-            <p><u>Size</u>: {f.size /1000} kB</p>
+            <p><u>Size</u>: {f.size /1000 /* possible to implement a switch
+             statement that will change size to mb/gb etc based off file size */} kB</p>
+            
             <p><u>Date</u>: {f.date}</p>
-            </li>))
+            <button onClick={() => deleteHandler (f.id)} className='delete-btn'></button>
+          </li>))
         }
       </ul>
       {/* loops through the array of submitted files and renders the file data 
@@ -84,6 +95,7 @@ function App() {
         type='file'
         onChange={handleFile}
         />
+      {/*invisible input element is located directly above a div with upload icon, making it drag and drop with no buttons or other crap*/}
 
     </div>
     

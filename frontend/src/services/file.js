@@ -35,9 +35,17 @@ const sendFile = async (jsonFile)=>{
     
 }
 
+const deleteFile = async (id) => {
+
+    const res = await axios.delete(`${baseUrl}${postUrl}/${id}`)
+    // send delete request to the post endpoint to delete a file with a requested id
+    return res.data
+}
+
 export default  {
 
     submit : sendFile,
     getAll : getAll,
+    delete: deleteFile
 
 }
