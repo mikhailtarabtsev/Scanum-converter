@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
 import axios from "axios"
 
-const getUrl = import.meta.env.VITE_DB_ENDPOINT
-const postUrl = import.meta.env.VITE_SUBMIT_ENDPOINT
+const getUrl = "/files/"
+const postUrl = "/upload/"
+const deleteUrl = "/delete/"
 
 // necessary backend endpoints will be declared here or in the .env
 
@@ -37,7 +38,7 @@ const sendFile = async (jsonFile)=>{
 
 const deleteFile = async (id) => {
 
-    const res = await axios.delete(`${baseUrl}${postUrl}/${id}`)
+    const res = await axios.delete(`${baseUrl}${deleteUrl}/${id}`)
     // send delete request to the post endpoint to delete a file with a requested id
     return res.data
 }
