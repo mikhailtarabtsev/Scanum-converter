@@ -3,16 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Image Upload</title>
 </head>
 <body>
-    <h1>Upload a File</h1>
+    <h1>Upload an Image</h1>
     <form id="uploadForm">
-        <input type="file" id="fileInput" name="file">
+        <input type="file" id="fileInput" name="file" accept="image/*">
         <button type="submit">Upload</button>
     </form>
-    <div id="result"></div>
-    <script src="script.js"></script>
+
+    <div id="response"></div>
+
+    <script>
+        document.getElementById("uploadForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById("fileInput");
+            const file = fileInput.files[0];
+
+            if (file) {
+                const formData = new FormData();
+                formData.append("file", file);
+
+                const response = await fetch("http://localhost:8000/upload/", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const result = await response.json();
+                document.getElementById("response").innerText = result.info;
+            } else {
+                alert("Please select a file to upload.");
+            }
+        });
+    </script>
 </body>
 </html>

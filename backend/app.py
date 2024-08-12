@@ -1,21 +1,22 @@
 from flask import Flask, request, redirect, url_for, send_from_directory, jsonify
 from werkzeug.utils import secure_filename
-import os
+from pathlib import Path
 
-# Создаем Flask-приложение и указываем путь к статическим файлам (фронтенд)
-app = Flask(__name__, static_folder='../frontend')
+app = Flask(__name__, static_folder='../frontend_sketch', static_url_path='')
 
-# Папка для хранения загруженных файлов
-UPLOAD_FOLDER = 'uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOLDER = Path('../uploads')
+UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
 
-# Разрешенные расширения файлов
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    if '.' in filename:
+        file_extension = filename.rsplit('.', 1)[1].lower()        
+        if file_extension in ALLOWED_EXTENSIONS:
+            print("Норм расширение", file_extension, filename)
+            return True
+    return False
 
 @app.route('/')
 def serve_index():
@@ -30,8 +31,9 @@ def upload_file():
         return jsonify({'error': 'No selected file'}), 400
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file.save(UPLOAD_FOLDER / filename)
         return jsonify({'filename': filename}), 200
+    return jsonify({'error': 'File not allowed'}), 400
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
