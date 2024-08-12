@@ -5,12 +5,9 @@ import Dropper from './components/dropper'
 
 
 function App() {
-
   const [filesSubmitted, setFilesSubmitted] = useState([])
 
-  
   return (
-  
   <div className='app' >
     <ProjectBar
      filesSubmitted = {filesSubmitted}
