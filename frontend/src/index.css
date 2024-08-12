@@ -47,7 +47,7 @@ ul{
   border-radius: 1em;
   padding: 5%;
   margin: 10% 5% 0;
-  background-image: linear-gradient(cyan, magenta);
+  background-image: linear-gradient(cyan, chartreuse);
 
 }
 .file-name{
@@ -71,4 +71,22 @@ font-size: 2em;
 background-color: lightblue;
 margin: 0;
 padding: 5%;
+}
+
+.delete-btn {
+  border: none;
+  background-color: rgb(247, 72, 72);
+  background-image: url("./assets/delete-button-svgrepo-com.png");
+  background-position: center;
+  background-size: 2em;
+  background-repeat: no-repeat;
+  border-radius: 10%;
+  height: 3em ;
+  width: 3em;
+  padding: 1em;
+  
+}
+.delete-btn:hover{
+  background-color: rgb(245, 134, 134);
+
 }
